@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: walletmanager-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/WalletManageDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: '!QAZ1qaz'
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    networks:
+      - walletnetwork
+
+  db:
+    image: mysql:8.0
+    container_name: walletmanager-db
+    environment:
+      MYSQL_ROOT_PASSWORD: '!QAZ1qaz'
+      MYSQL_DATABASE: WalletManageDB
+    ports:
+      - "3306:3306"
+    networks:
+      - walletnetwork
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+networks:
+  walletnetwork:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
