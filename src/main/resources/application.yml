@@ -4,11 +4,15 @@ spring:
     username: root
     password: '!QAZ1qaz' # if you have pass word like this spring detect that as tag not pass so use '' to prevent that
     driver-class-name: com.mysql.cj.jdbc.Driver
-  #    hikari:
+  sql:
+    init:
+      mode: always
+    #    hikari:
   #      # This property defines the maximum number of connections that can be held in the pool. Setting this appropriately can improve application performance by reusing existing connections.
   #      maximum-pool-size: 10
   #      # This property specifies the maximum time (in milliseconds) that the driver will wait for a connection from the pool. If no connection is available within the timeout period, an exception will be thrown.
   #      connection-timeout: 3000
+
   jpa:
     # have this in mysql connecting for not getting : org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.SQLGrammarException: Unable to build DatabaseInformation [Unknown table 'SEQUENCES' in information_schema] [n/a]
     properties:

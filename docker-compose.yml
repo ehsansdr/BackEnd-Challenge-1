@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  app:
+  app: #  This is your Spring Boot app container. It’s built from the Dockerfile we created.
     build: .
     container_name: walletmanager-app
     ports:
       - "8080:8080"
-    depends_on:
+    depends_on: # Ensures that the MySQL database starts before your Spring Boot application
       - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/WalletManageDB
@@ -17,7 +17,7 @@ services:
     networks:
       - walletnetwork
 
-  db:
+  db: # This is your MySQL database container
     image: mysql:8.0
     container_name: walletmanager-db
     environment:
