@@ -362,3 +362,78 @@ Afterward, you can rebuild and restart:
 If all of these steps work without any issues, you can be confident that your project has been successfully Dockerized and is running correctly.
 
 Let me know if you encounter any issues during these steps!
+*******
+**so when i want to change the project 
+and add some feature after the runnig container
+i shoul stop and re run the iamge 
+or i shorld do mvn clean pachage again**
+
+When you make changes to your project and want them reflected in a Dockerized environment, you do need to follow a specific process to rebuild and redeploy the updated version of your application. Here's how it works:
+
+Steps After Making Changes:
+Stop the Running Docker Container:
+
+You should stop the running container first, because Docker is running a specific instance of your application, and changes made to your local code won't be automatically reflected inside the container unless you rebuild it.
+You can stop the container with:
+bash
+Copy
+docker stop <container_id_or_name>
+You can find the container ID or name using:
+bash
+Copy
+
+      sudo docker ps
+      CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+      sudo docker ps -a
+      CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS                        PORTS     NAMES
+      685dcb97994d   walletmanager-app   "java -jar WalletMan…"   30 minutes ago   Exited (137) 23 seconds ago             walletmanager-app
+      b9da242b7268   mysql:8.0           "docker-entrypoint.s…"   30 minutes ago   Exited (137) 23 seconds ago             walletmanager-db
+
+do not forget to have sudo in that instead you will get confused :
+
+      docker ps -a
+      CONTAINER ID   IMAGE      COMMAND                  CREATED      STATUS                      PORTS                       NAMES
+      1d53ec0dc176   mysql      "docker-entrypoint.s…"   2 days ago   Exited (1) 47 hours ago                                 objective_robinson
+      5433e50b8209   mysql      "docker-entrypoint.s…"   2 days ago   Created                                                 goofy_sammet
+      a4713a49fc4a   postgres   "docker-entrypoint.s…"   2 days ago   Exited (255) 23 hours ago   127.0.0.1:55000->5432/tcp   zealous_roentgen
+      5167c99b07ac   nginx      "/docker-entrypoint.…"   2 days ago   Exited (127) 2 days ago                                 happy_chebyshev
+      7b6376ee68b8   nginx      "/docker-entrypoint.…"   6 days ago   Exited (0) 2 days ago
+
+see the *sudo* is important
+
+Rebuild the Docker Image:
+
+After making changes to your code (e.g., adding features, fixing bugs), you'll need to rebuild the Docker image to include those changes.
+To do this, you'll typically run the following command in the root of your project (where your Dockerfile is located):
+bash
+Copy
+docker build -t your-image-name .
+This will rebuild the image and include your latest code changes.
+Restart the Docker Container:
+
+Once the image is rebuilt, you can start a new container based on the updated image:
+bash
+Copy
+
+      docker run -p 8080:8080 your-image-name
+
+This starts a new container with your updated application, and you can access it at http://localhost:8080/ (or whatever port you're using).
+Do You Need to Run mvn clean package Again?
+Yes, you should run mvn clean package if you're building your application locally (without Docker) before building the Docker image. However, if you're using Docker to handle the build process (via a Dockerfile that builds your application from source), you don't need to run mvn clean package manually in most cases.
+
+Here's how it typically works:
+If your Dockerfile is set up to build the project (like this):
+
+Dockerfile
+   Copy
+
+      FROM maven:3.6.3-jdk-11 AS build
+      COPY . /app
+      WORKDIR /app
+      RUN mvn clean package
+The docker build command will execute mvn clean package automatically as part of the image creation process. So, in this case, no need to run mvn clean package manually—Docker will handle it.
+
+
+
