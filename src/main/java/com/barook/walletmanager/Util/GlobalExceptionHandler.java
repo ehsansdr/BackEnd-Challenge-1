@@ -1,0 +1,95 @@
+package com.barook.walletmanager.Util;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+
+@ControllerAdvice  // This annotation makes this class a global exception handler
+public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        BindingResult result = ex.getBindingResult();
+        for (FieldError fieldError : result.getFieldErrors()) {
+            errors.append(fieldError.getField()).append(": ").append(fieldError.getDefaultMessage()).append("\n");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.toString());
+    }
+
+    // this mehtod created to handle duplicated value for User nationalId
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleValidationException(DataIntegrityViolationException ex) {
+        // DO NOT HAVE TWO METHOD FOR HANDLE SAME EXCEPTION YOU WILL GET ERROR IN SRARTING SERVER
+        StringBuilder errors = new StringBuilder();
+        String result = ex.getMessage();
+        if (result.contains("user.UK5rni7sst5cu05f85kawcglq6s")) // the unique ness of the national id
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The user with national id already exists");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.toString());
+    }
+
+//    // this mehtod created to handle duplicated value for User nationalId
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+//        // Check if the cause is a SQLIntegrityConstraintViolationException
+//        if (ex.getCause() instanceof SQLException) {
+//            SQLException sqlException = (SQLException) ex.getCause();
+//
+//            // MySQL error code 1062 is for duplicate entry
+//            if (sqlException.getErrorCode() == 1062) {
+//                // Handle the duplicate entry scenario
+//                String errorMessage = "Duplicate entry error: " + sqlException.getMessage();
+//                return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//
+//        // Return a generic error message for other DataIntegrityViolationExceptions
+//        return new ResponseEntity<>("Data Integrity Violation", HttpStatus.BAD_REQUEST);
+//    }
+
+
+//    @ExceptionHandler(value = {YourCustomException.class}) // Handle specific exception types
+//    public ResponseEntity<ErrorResponse> handleYourCustomException(YourCustomException ex, WebRequest request) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                LocalDateTime.now(),
+//                HttpStatus.BAD_REQUEST.value(), // Or appropriate HTTP status
+//                ex.getMessage(),
+//                request.getDescription(false));
+//
+//        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST); // Return appropriate HTTP status
+//    }
+//
+//    @ExceptionHandler(value = {AnotherCustomException.class})
+//    public ResponseEntity<ErrorResponse> handleAnotherCustomException(AnotherCustomException ex, WebRequest request) {
+//        // ... similar logic for another exception type, potentially with a different HTTP status
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                LocalDateTime.now(),
+//                HttpStatus.NOT_FOUND.value(), // Or appropriate HTTP status
+//                ex.getMessage(),
+//                request.getDescription(false));
+//
+//        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+//    }
+//
+//
+//    @ExceptionHandler(value = {Exception.class}) // Handle all other exceptions (as a last resort)
+//    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                LocalDateTime.now(),
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "An unexpected error occurred.", // Generic message (don't expose internal details in production)
+//                request.getDescription(false));
+//
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+}
