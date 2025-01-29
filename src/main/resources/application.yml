@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/WalletDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC  # Replace with your DB name
+    url: jdbc:mysql://localhost:3306/WalletManageDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC  # Replace with your DB name
     username: root  # Your MySQL username (NOT root for production!)
     password: '!QAZ1qaz' # Your MySQL password
     driver-class-name: com.mysql.cj.jdbc.Driver # Essential for MySQL
