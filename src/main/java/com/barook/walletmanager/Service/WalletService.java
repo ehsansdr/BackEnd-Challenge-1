@@ -7,6 +7,7 @@ import com.barook.walletmanager.Repository.UserRepository;
 import com.barook.walletmanager.Repository.WalletRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -55,16 +56,28 @@ public class WalletService {
     public String getTotalBalance(int userId) throws JsonProcessingException {
         ObjectMapper jsonObject = new ObjectMapper();
 
-        Map<String, Object> map = new HashMap<>();
+        // Create an ObjectNode to represent a JSON object
+        ObjectNode objectNode = jsonObject.createObjectNode();
+
 
         List<Long> totalBalnce;
         totalBalnce = walletRepository.getUserTotalBallance(userId);
 
         // map.put("user_id", userId);
-        map.put("total_balance", totalBalnce.get(0));
-        String jsonStr = jsonObject.writeValueAsString(map);
+        //map.put("total_balance", totalBalnce.get(0));
 
-        System.out.println("jsonObject : " + jsonObject);
-        return jsonStr;
+        // Add fields to the ObjectNode
+        objectNode.put("total_balance", totalBalnce.get(0));
+
+        // if you use writeValueAsString you will get string value
+        // Pretty-print the JSON by using the writerWithDefaultPrettyPrinter method
+        String prettyJson = jsonObject.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(objectNode);
+
+
+        System.out.println("jsonObject : " + prettyJson);
+        return prettyJson;
     }
+
+
 }
