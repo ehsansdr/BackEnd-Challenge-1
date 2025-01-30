@@ -66,18 +66,18 @@ public class TransactionService {
         // if from wallet is null
         if (walletRepository.findById(transactionDto.fromWalletId()).orElse(null) == null){
             isAlowedToProcessTransaction = false;
-            throw new WalletTransactionException("fromWallet not found");
+            throw new WalletTransactionException("fromWallet : " + transactionDto.fromWalletId() + " not found");
         }
         // if to wallet is null
         if (walletRepository.findById(transactionDto.toWalletId()).orElse(null) == null){
             isAlowedToProcessTransaction = false;
-            throw new WalletTransactionException("toWallet not found");
+            throw new WalletTransactionException("toWallet : " + transactionDto.toWalletId() + " not found");
         }
         // if from wallet does not have enough balance
         Wallet fromWallet = walletRepository.findById(transactionDto.fromWalletId()).orElse(null);
         if (fromWallet.getBalance().compareTo(new BigDecimal(transactionDto.balance())) < 0){
             isAlowedToProcessTransaction = false;
-            throw new WalletTransactionException("fromWallet does not have enough balance");
+            throw new WalletTransactionException("fromWallet : " + transactionDto.fromWalletId() + " does not have enough balance");
         }
 
         // if we want to send the money to the same wallet as fromWalle

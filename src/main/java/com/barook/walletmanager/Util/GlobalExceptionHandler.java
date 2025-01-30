@@ -116,16 +116,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WalletTransactionException.class)
     public ResponseEntity<String> handleWalletTransactionException(WalletTransactionException ex) {
 
-        if (ex.getMessage().contains("Both wallets don't exist")){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Both wallets don't exist");
 
-        }if (ex.getMessage().contains("fromWallet not found")){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fromWallet not found");
-
-        }if (ex.getMessage().contains("toWallet not found")){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("toWallet not found");
-
-        }
         // Return the exception message with HTTP status BAD_REQUEST
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
