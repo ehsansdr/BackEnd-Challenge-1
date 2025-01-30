@@ -1,4 +1,5 @@
 package com.barook.walletmanager.Util;
+import com.barook.walletmanager.CustomeException.WalletTransactionException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -110,6 +111,23 @@ public class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The fromWallet id is not exist");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage().toString());
+    }
+
+    @ExceptionHandler(WalletTransactionException.class)
+    public ResponseEntity<String> handleWalletTransactionException(WalletTransactionException ex) {
+
+        if (ex.getMessage().contains("Both wallets don't exist")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Both wallets don't exist");
+
+        }if (ex.getMessage().contains("fromWallet not found")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fromWallet not found");
+
+        }if (ex.getMessage().contains("toWallet not found")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("toWallet not found");
+
+        }
+        // Return the exception message with HTTP status BAD_REQUEST
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 //    // this mehtod created to handle duplicated value for User nationalId

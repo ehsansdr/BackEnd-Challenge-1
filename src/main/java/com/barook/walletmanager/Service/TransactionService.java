@@ -1,5 +1,6 @@
 package com.barook.walletmanager.Service;
 
+import com.barook.walletmanager.CustomeException.WalletTransactionException;
 import com.barook.walletmanager.DTO.TransactionDto;
 import com.barook.walletmanager.Entity.Transaction;
 import com.barook.walletmanager.Entity.Wallet;
@@ -56,31 +57,34 @@ public class TransactionService {
         boolean isAlowedToProcessTransaction = true;
 
         // if both wallet is null
-        if (walletRepository.findById(transactionDto.fromWalletId()) == null &&
-                walletRepository.findById(transactionDto.toWalletId()) == null
+        if (walletRepository.findById(transactionDto.fromWalletId()).orElse(null) == null &&
+                walletRepository.findById(transactionDto.toWalletId()).orElse(null) == null
         ){
             isAlowedToProcessTransaction = false;
-            throw new NullPointerException("Wallet : " + transactionDto.fromWalletId() +
-                    " and " + transactionDto.toWalletId() + " not found");
+            throw new WalletTransactionException("Both wallets don't exist");
         }
         // if from wallet is null
-        if (walletRepository.findById(transactionDto.fromWalletId()) == null){
+        if (walletRepository.findById(transactionDto.fromWalletId()).orElse(null) == null){
             isAlowedToProcessTransaction = false;
-            throw new NullPointerException("Wallet : " + transactionDto.fromWalletId() + " not found");
+            throw new WalletTransactionException("fromWallet not found");
         }
         // if to wallet is null
-        if (walletRepository.findById(transactionDto.toWalletId()) == null){
+        if (walletRepository.findById(transactionDto.toWalletId()).orElse(null) == null){
             isAlowedToProcessTransaction = false;
-            throw new NullPointerException("Wallet : " + transactionDto.toWalletId() + " not found");
+            throw new WalletTransactionException("toWallet not found");
         }
         // if from wallet does not have enough balance
         Wallet fromWallet = walletRepository.findById(transactionDto.fromWalletId()).orElse(null);
-        if (fromWallet.getBalance().compareTo(BigDecimal.ZERO) < 0){
+        if (fromWallet.getBalance().compareTo(new BigDecimal(transactionDto.balance())) < 0){
             isAlowedToProcessTransaction = false;
-//            throw new ConstraintViolationException();
+            throw new WalletTransactionException("fromWallet does not have enough balance");
         }
 
-        // if we want to send the money to the same wallet as fromWallet
+        // if we want to send the money to the same wallet as fromWalle
+        if (transactionDto.fromWalletId() == transactionDto.toWalletId()){
+            isAlowedToProcessTransaction = false;
+            throw new WalletTransactionException("fromWallet and toWallet are the same");
+        }
 
         return isAlowedToProcessTransaction;
     }
