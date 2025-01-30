@@ -35,11 +35,5 @@ public class TransactionSummaryTask {
         System.out.println("Total amount of transactions for the day: " + totalAmount);
     }
 
-    // This method will run 10 seconds after the application starts
-    @Scheduled(initialDelay = 10 * 1000, fixedRate = 10 * 1000)
-    public void printServerIsRunning() {
-        System.out.println(" *************** server is running ****************");
-    }
-
 
 }
