@@ -34,7 +34,7 @@ public class WalletController {
     public ResponseEntity<String> getTotalBalanceOfTheUser(
             @PathVariable("user_id") int userId) throws JsonProcessingException {
 
-        String jsonStr = walletService.getTotalBalance(userId);
+        String jsonStr = walletService.getTotalBalanceByPrettyJson(userId);
 
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 

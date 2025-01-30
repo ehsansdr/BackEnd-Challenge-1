@@ -53,7 +53,33 @@ public class WalletService {
         return wallet;
     }
 
-    public String getTotalBalance(int userId) throws JsonProcessingException {
+    public String getTotalBalanceByPrettyJson(int userId) throws JsonProcessingException {
+        ObjectMapper jsonObject = new ObjectMapper();
+
+        // Create an ObjectNode to represent a JSON object
+        ObjectNode objectNode = jsonObject.createObjectNode();
+
+
+        List<Long> totalBalnce;
+        totalBalnce = walletRepository.getUserTotalBallance(userId);
+
+        // map.put("user_id", userId);
+        //map.put("total_balance", totalBalnce.get(0));
+
+        // Add fields to the ObjectNode
+        objectNode.put("total_balance", totalBalnce.get(0));
+
+        // if you use writeValueAsString you will get string value
+        // Pretty-print the JSON by using the writerWithDefaultPrettyPrinter method
+        String prettyJson = jsonObject.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(objectNode);
+
+
+        System.out.println("jsonObject : " + prettyJson);
+        return prettyJson;
+    }
+
+    public String getTotalBalanceAsString(int userId) throws JsonProcessingException {
         ObjectMapper jsonObject = new ObjectMapper();
 
         // Create an ObjectNode to represent a JSON object
