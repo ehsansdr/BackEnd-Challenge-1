@@ -1,25 +1,22 @@
-version: '3.8'
+#version: '3.7' i get error
 
 services:
-  app: #  This is your Spring Boot app container. It’s built from the Dockerfile we created.
+  wallet-manager:
     build: .
-    container_name: walletmanager-app
+    container_name: wallet-manager-app
     ports:
-      - "8080:8080"
-    depends_on: # Ensures that the MySQL database starts before your Spring Boot application
-      - db
+      - "8081:8080"  # Map local port 8081 to container port 8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/WalletManageDB
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/WalletManageDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: '!QAZ1qaz'
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-    networks:
-      - walletnetwork
+    depends_on:
+      - mysql-db
 
-  db: # This is your MySQL database container
+  mysql-db:
     image: mysql:8.0
-    container_name: walletmanager-db
+    container_name: wallet-manager-db
     environment:
       MYSQL_ROOT_PASSWORD: '!QAZ1qaz'
       MYSQL_DATABASE: WalletManageDB

@@ -28,4 +28,3 @@ logging:
     org.hibernate.SQL: DEBUG # To see SQL statements
     org.hibernate.type.descriptor.sql: TRACE # To see data binding
 
-# Other Spring Boot configurations as needed...

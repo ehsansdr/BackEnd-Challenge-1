@@ -1,15 +1,14 @@
-# Use a base image with OpenJDK (since Spring Boot requires Java)
+# Use an official Java runtime as a base image
 FROM openjdk:17-jdk-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the Spring Boot jar file into the container (adjust the path if necessary)
+# Copy the compiled JAR file from the target directory to the container's /app directory
 COPY target/WalletManager-0.0.1-SNAPSHOT.jar /app/WalletManager.jar
-### make shoe for the target/ use the exact .jar file that created by mvn clean package in te target instead you will get error
 
-# Expose the port that Spring Boot will run on (default is 8080)
+# Expose the port the app will run on (8080)
 EXPOSE 8080
 
-# Command to run the Spring Boot app
-CMD ["java", "-jar", "WalletManager.jar"]
+# Define the entrypoint to run the application
+ENTRYPOINT ["java", "-jar", "/app/WalletManager.jar"]

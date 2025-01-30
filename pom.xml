@@ -84,7 +84,6 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>LATEST</version>
                         </exclude>
                     </excludes>
                 </configuration>

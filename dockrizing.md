@@ -56,9 +56,9 @@ Create a docker-compose.yml file in the root of your project:
       services:
       app:
       build: .
-      container_name: walletmanager-app
+      container_name: walletmanager-app # the name of the container that you can create tat the end and see that with sudo docker ps -a
       ports:
-      - "8080:8080"
+      - "8080:8080" # when you run the docker and the server at the same time you will get error in one of them that the port is already in use
       depends_on:
         - db
         environment:
@@ -77,7 +77,7 @@ Create a docker-compose.yml file in the root of your project:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: WalletManageDB
       ports:
-      - "3306:3306"
+      - "3306:3306" # when you run the docker and the server at the same time you will get error in one of them that the port is already in use i do not know you can change or not
       networks:
         - walletnetwork
         volumes:
@@ -101,6 +101,41 @@ app: This is your Spring Boot app container. It’s built from the Dockerfile we
       MYSQL_ROOT_PASSWORD: Password for the root user (password).
       MYSQL_DATABASE: The name of the database to create (walletmanager).
 
+like : application.yml
+      
+            #server:
+      #  port: 8081 # basic is 8080
+      spring:
+      datasource:
+      url: jdbc:mysql://localhost:3306/WalletManageDB
+      username: root
+      password: '!QAZ1qaz' # if you have pass word like this spring detect that as tag not pass so use '' to prevent that
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      sql:
+      init:
+      mode: always
+      #    hikari:
+      #      # This property defines the maximum number of connections that can be held in the pool. Setting this appropriately can improve application performance by reusing existing connections.
+      #      maximum-pool-size: 10
+      #      # This property specifies the maximum time (in milliseconds) that the driver will wait for a connection from the pool. If no connection is available within the timeout period, an exception will be thrown.
+      #      connection-timeout: 3000
+      
+      jpa:
+      # have this in mysql connecting for not getting : org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.SQLGrammarException: Unable to build DatabaseInformation [Unknown table 'SEQUENCES' in information_schema] [n/a]
+      properties:
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+      hibernate:
+      ddl-auto: update
+      format_sql: true
+      database: mysql
+      show-sql: true
+      
+      logging:
+      level:
+      root: INFO
+
+for better indent see application.yml in project
+
 depends_on: Ensures that the MySQL database starts before your Spring Boot application.
 volumes: The MySQL database data is persisted in a volume (mysql_data) so that it is not lost when the container is stopped or removed.
 5. Configure Your Spring Boot Application for Docker
@@ -118,6 +153,7 @@ Copy
       spring.jpa.hibernate.ddl-auto=update
       spring.jpa.show-sql=true
       spring.datasource.initialization-mode=always
+
 This configuration ensures that Spring Boot connects to the db container, which is the MySQL service defined in docker-compose.yml.
 
 6. Build and Run Your Application with Docker
@@ -409,7 +445,8 @@ After making changes to your code (e.g., adding features, fixing bugs), you'll n
 To do this, you'll typically run the following command in the root of your project (where your Dockerfile is located):
 bash
 Copy
-docker build -t your-image-name .
+
+      docker build -t your-image-name .
 This will rebuild the image and include your latest code changes.
 Restart the Docker Container:
 
