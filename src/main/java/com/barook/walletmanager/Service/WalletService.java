@@ -89,9 +89,6 @@ public class WalletService {
         List<Long> totalBalnce;
         totalBalnce = walletRepository.getUserTotalBallance(userId);
 
-        // map.put("user_id", userId);
-        //map.put("total_balance", totalBalnce.get(0));
-
         // Add fields to the ObjectNode
         objectNode.put("total_balance", totalBalnce.get(0));
 

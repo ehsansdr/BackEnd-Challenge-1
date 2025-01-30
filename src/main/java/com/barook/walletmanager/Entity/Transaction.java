@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.UUID;
 
 @Data
@@ -33,10 +34,6 @@ public class Transaction {
 
     @Column(precision = 19, scale = 4) // Important for currency!
     private BigDecimal amount;
-
-    @Enumerated(EnumType.STRING) // Store as string for readability
-    private TransactionType type; // Add a transaction type (DEPOSIT, WITHDRAWAL, TRANSFER)
-
     private LocalDateTime transactionDate; // Timestamp of the transaction
 
     @Column(unique = true) // Enforce uniqueness in the database
@@ -55,7 +52,9 @@ public class Transaction {
     // Add a pre-persist method to automatically set the timestamp
     @PrePersist
     protected void onCreate() {
-        this.referenceId = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String hyphenFreeUUID = uuid.replace("-", "");
+        this.referenceId = hyphenFreeUUID;
         transactionDate = LocalDateTime.now();
     }
 }
