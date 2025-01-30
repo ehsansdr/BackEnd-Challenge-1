@@ -55,6 +55,7 @@ public class TransactionService {
 
         boolean isAlowedToProcessTransaction = true;
 
+        // if both wallet is null
         if (walletRepository.findById(transactionDto.fromWalletId()) == null &&
                 walletRepository.findById(transactionDto.toWalletId()) == null
         ){
@@ -62,21 +63,24 @@ public class TransactionService {
             throw new NullPointerException("Wallet : " + transactionDto.fromWalletId() +
                     " and " + transactionDto.toWalletId() + " not found");
         }
-
+        // if from wallet is null
         if (walletRepository.findById(transactionDto.fromWalletId()) == null){
             isAlowedToProcessTransaction = false;
             throw new NullPointerException("Wallet : " + transactionDto.fromWalletId() + " not found");
         }
+        // if to wallet is null
         if (walletRepository.findById(transactionDto.toWalletId()) == null){
             isAlowedToProcessTransaction = false;
             throw new NullPointerException("Wallet : " + transactionDto.toWalletId() + " not found");
         }
-
+        // if from wallet does not have enough balance
         Wallet fromWallet = walletRepository.findById(transactionDto.fromWalletId()).orElse(null);
         if (fromWallet.getBalance().compareTo(BigDecimal.ZERO) < 0){
             isAlowedToProcessTransaction = false;
 //            throw new ConstraintViolationException();
         }
+
+        // if we want to send the money to the same wallet as fromWallet
 
         return isAlowedToProcessTransaction;
     }

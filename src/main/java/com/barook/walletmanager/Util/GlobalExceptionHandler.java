@@ -86,6 +86,32 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage().toString());
     }
 
+    // this mehtod created to handle existance of user id of wallet
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
+        // DO NOT HAVE TWO METHOD FOR HANDLE SAME EXCEPTION YOU WILL GET ERROR IN SRARTING SERVER
+        Logger log = Logger.getLogger(this.getClass().getName() + " ConstraintViolationException");
+
+
+        StringBuilder errors = new StringBuilder();
+        String result = ex.getMessage();
+//        if (ex.("because \"toWallet\" is null")) // the existance of the wallet in transaction
+//        {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The toWallet id is not exist");
+//        }
+
+        if (result.contains("because \"toWallet\" is null")) // the existance of the wallet in transaction
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The toWallet id is not exist");
+        }
+
+        if (result.contains("because \"fromWallet\" is null")) // the existance of the wallet in transaction
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The fromWallet id is not exist");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage().toString());
+    }
+
 //    // this mehtod created to handle duplicated value for User nationalId
 //    @ExceptionHandler(DataIntegrityViolationException.class)
 //    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
