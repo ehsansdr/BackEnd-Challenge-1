@@ -1,10 +1,13 @@
 package com.barook.walletmanager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Data
@@ -33,6 +36,7 @@ public class User {
     @Column(name = "created_date")
     private LocalDateTime createdAt;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     @ToString.Exclude // This will ensure that wallets is not included in the toString() output, thus preventing recursion.
     private List<Wallet> wallets;
@@ -48,6 +52,9 @@ public class User {
 
     @PrePersist
     public void prePersist() {
+        Logger logger = LoggerFactory.getLogger(User.class); // Get logger within @PrePersist
+        logger.info("persist user: ", this.toString());
+
         if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }

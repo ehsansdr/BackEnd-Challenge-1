@@ -1,4 +1,12 @@
 package com.barook.walletmanager.ResponceDTO;
 
-public record UserResDto (){
+import java.time.LocalDateTime;
+
+public record UserResDto (
+        Long id,
+        long nationalId,
+        String firstName,
+        String lastName,
+        LocalDateTime createdAt
+){
 }

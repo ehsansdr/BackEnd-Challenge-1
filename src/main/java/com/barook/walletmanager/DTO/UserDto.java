@@ -1,4 +1,15 @@
 package com.barook.walletmanager.DTO;
 
-public record UserDto() {
+import jakarta.validation.constraints.NotNull;
+
+public record UserDto(
+        @NotNull
+        long nationalId,
+
+        @NotNull
+        String firstName,
+
+        @NotNull
+        String lastName
+) {
 }
