@@ -133,24 +133,4 @@ class WalletServiceTest {
     }
 
 
-//    @Test
-//    void test_get_all_wallet_by_user_id() {
-//        // Prepare a list of wallets for a specific user
-//        Wallet wallet2 = new Wallet(2L, BigDecimal.valueOf(1000), user, LocalDateTime.now());
-//        wallet = new Wallet(1L, BigDecimal.valueOf(500), user, LocalDateTime.now());
-//
-//        List<Wallet> wallets = Arrays.asList(wallet, wallet2);
-//
-//        // Mock the behavior of walletRepository
-//        when(walletRepository.findByUserId(1L)).thenReturn(wallets);
-//
-//        // Call the service method
-//        List<WalletResDto> walletResDtos = walletService.getAllWalletByUserid(1L);
-//
-//        // Verify the result
-//        assertEquals(2, walletResDtos.size());
-//        assertEquals(wallet.getId(), walletResDtos.get(0).id());
-//        assertEquals(wallet2.getId(), walletResDtos.get(1).id());
-//    }
-
 }

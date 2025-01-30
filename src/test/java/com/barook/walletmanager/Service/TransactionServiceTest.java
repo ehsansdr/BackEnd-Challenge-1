@@ -89,8 +89,6 @@ class TransactionServiceTest {
 
         // Verify that the save method is called on the repository
         verify(transactionRepository, times(1)).save(any(Transaction.class));
-
-        // Additional assertions can be added here, e.g., to verify the content of the result
     }
 
     @Test
