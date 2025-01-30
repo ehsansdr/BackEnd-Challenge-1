@@ -5,17 +5,16 @@ import com.barook.walletmanager.Entity.User;
 import com.barook.walletmanager.Entity.Wallet;
 import com.barook.walletmanager.Repository.UserRepository;
 import com.barook.walletmanager.Repository.WalletRepository;
+import com.barook.walletmanager.ResponceDTO.WalletResDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.LongAccumulator;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class WalletService {
@@ -33,7 +32,7 @@ public class WalletService {
     public Wallet saveWallet(WalletDto walletDto) {
         Wallet wallet = getWalletFromDto(walletDto);
         User user;
-        if (userRepository.findById(walletDto.userId()) != null) {
+        if (userRepository.findById(walletDto.userId()).orElse(null) != null) {
             long userId = walletDto.userId();
             user = userRepository.findById(userId).orElse(null);
         }else {
@@ -42,7 +41,9 @@ public class WalletService {
         wallet.setUser(user);
 
         Wallet walletSaved = walletRepository.save(wallet);
-        return walletRepository.save(walletSaved);
+
+        log.info("Wallet saved: " + walletSaved);
+        return walletSaved;
     }
 
     public Wallet getWalletFromDto(WalletDto walletDto){
@@ -99,6 +100,31 @@ public class WalletService {
 
         System.out.println("jsonObject : " + prettyJson);
         return prettyJson;
+    }
+
+
+    public List<WalletResDto> getAllWallet() {
+        List<Wallet> wallets = walletRepository.findAll();
+        return wallets.stream()  // Create a stream from the List<Wallet>
+                .map(this::getWalletResDtoFromWallet) // Transform each Wallet into WalletResDto
+                .collect(Collectors.toList());
+    }
+
+    public List<WalletResDto> getAllWalletByUserid(long userId) {
+
+        List<Wallet> wallets = walletRepository.findByUserId(userId);
+        return  wallets.stream()  // Create a stream from the List<Wallet>
+                .map(this::getWalletResDtoFromWallet) // Transform each Wallet into WalletResDto
+                .collect(Collectors.toList());
+    }
+
+    private WalletResDto getWalletResDtoFromWallet(Wallet wallet) {
+        return new WalletResDto(
+                wallet.getId(),
+                wallet.getUser().getId() ,
+                wallet.getBalance() ,
+                wallet.getCreatedAt()
+        );
     }
 
 

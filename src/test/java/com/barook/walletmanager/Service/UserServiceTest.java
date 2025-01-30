@@ -34,13 +34,6 @@ class UserServiceTest {
     }
 
     @Test
-    void find_user_by_id() {
-
-
-
-    }
-
-    @Test
     void save_user() {
 
         // given

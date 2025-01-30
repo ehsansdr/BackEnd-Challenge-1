@@ -20,6 +20,8 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
     nativeQuery = true)
     public List<Long> getUserTotalBallance(@Param("userId") long userId);
 
+    public List<Wallet> findByUserId(long userId);
+
     @Modifying // Important for update queries
     @Transactional // Essential for data consistency
     @Query(nativeQuery = true, value = "UPDATE wallet SET balance = :amount WHERE id = :walletId")

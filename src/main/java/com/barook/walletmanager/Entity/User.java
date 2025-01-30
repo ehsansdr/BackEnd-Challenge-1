@@ -42,12 +42,19 @@ public class User {
     private List<Wallet> wallets;
 
 
-    public User(long nationalId, String firstName, String lastName, LocalDateTime createdAt, List<Wallet> wallets) {
+    public User(long nationalId, String firstName, String lastName, List<Wallet> wallets) {
         this.nationalId = nationalId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.createdAt = createdAt;
         this.wallets = wallets;
+    }
+
+    public User(long nationalId, String firstName, String lastName) {
+        this.nationalId = nationalId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = LocalDateTime.now();
     }
 
     @PrePersist

@@ -32,7 +32,7 @@ public class TransactionSummaryTask {
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        System.out.println("Total amount of transactions for the day: " + totalAmount);
+        System.out.println("\nTotal amount of transactions for the day: " + totalAmount);
     }
 
 

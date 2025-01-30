@@ -2,14 +2,13 @@ package com.barook.walletmanager.Controller;
 
 import com.barook.walletmanager.DTO.WalletDto;
 import com.barook.walletmanager.Entity.Wallet;
+import com.barook.walletmanager.ResponceDTO.WalletResDto;
 import com.barook.walletmanager.Service.WalletService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.runtime.ObjectMethods;
 import java.util.List;
 
 @RestController
@@ -37,6 +36,21 @@ public class WalletController {
 
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/get-all-wallets")
+    public ResponseEntity<List<WalletResDto>> getAllWallets() {
+        return new ResponseEntity<>(
+                walletService.getAllWallet(),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-wallets-of-user/{userid}")
+    public ResponseEntity<List<WalletResDto>> getAllWallets(
+            @PathVariable("userid") long userId) throws JsonProcessingException {
+        return new ResponseEntity<>(
+                walletService.getAllWalletByUserid(userId),
+                HttpStatus.OK);
     }
 
 
