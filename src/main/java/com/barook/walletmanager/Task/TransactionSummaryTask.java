@@ -2,6 +2,7 @@ package com.barook.walletmanager.Task;
 
 import com.barook.walletmanager.Entity.Transaction;
 import com.barook.walletmanager.Repository.TransactionRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,11 @@ public class TransactionSummaryTask {
         System.out.println("Total amount of transactions for the day: " + totalAmount);
     }
 
+    // This method will run 10 seconds after the application starts
+    @Scheduled(initialDelay = 10 * 1000, fixedRate = 10 * 1000)
+    public void printServerIsRunning() {
+        System.out.println(" *************** server is running ****************");
+    }
 
 
 }

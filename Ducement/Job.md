@@ -1,3 +1,14 @@
+make sure you have **@EnableScheduling**  in your Spring application
+
+    @SpringBootApplication
+    @EnableScheduling 
+    public class MyApplication {
+      public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+      }
+    }
+
+
 The `@Scheduled(cron = "0 0 0 * * ?")` annotation in Spring is used to schedule a task to run at specific times according to the cron expression you provide. In this case, the cron expression "0 0 0 * * ?" represents a schedule for running the task at midnight every day.
 
 Breaking down the Cron Expression
